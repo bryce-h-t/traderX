@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ class PositionServiceIntegrationTest {
 
     @Autowired
     private PositionRepository positionRepository;
+
+    @AfterEach
+    void cleanup() {
+        positionRepository.deleteAll();
+    }
 
     private Position createTestPosition(Integer accountId, String security, Integer quantity) {
         Position position = new Position();
