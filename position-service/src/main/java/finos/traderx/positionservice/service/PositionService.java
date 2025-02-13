@@ -1,6 +1,7 @@
 package finos.traderx.positionservice.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,13 +18,20 @@ public class PositionService {
 	PositionRepository positionRepository;
 
 	public List<Position> getAllPositions() {
-		List<Position> positions = new ArrayList<Position>();
-		this.positionRepository.findAll().forEach(account -> positions.add(account));
-		return positions;
+		try {
+			List<Position> positions = new ArrayList<Position>();
+			this.positionRepository.findAll().forEach(account -> positions.add(account));
+			return positions;
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 	}
 
 	public List<Position> getPositionsByAccountID(int id) {
-		return this.positionRepository.findByAccountId(id);
+		try {
+			return this.positionRepository.findByAccountId(id);
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 	}
-
 }
