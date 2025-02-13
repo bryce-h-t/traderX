@@ -87,10 +87,11 @@ class PositionServiceTest {
     }
 
     @Test
-    void getPositionsByAccountID_NullAccountId_ReturnsEmptyList() {
-        when(positionRepository.findByAccountId(null)).thenReturn(Collections.emptyList());
+    void getPositionsByAccountID_InvalidAccountId_ReturnsEmptyList() {
+        Integer accountId = -1;
+        when(positionRepository.findByAccountId(accountId)).thenReturn(Collections.emptyList());
         
-        List<Position> positions = positionService.getPositionsByAccountID(null);
+        List<Position> positions = positionService.getPositionsByAccountID(accountId);
         
         assertTrue(positions.isEmpty());
     }
