@@ -2,6 +2,13 @@ openapi: 3.0.1
 info:
   title: "Account Service - TraderX"
   version: "1.0"
+  description: "Account management service for TraderX platform. Provides CRUD operations for accounts and account-user mappings. This service is responsible for managing trading accounts and their user associations."
+  contact:
+    name: "TraderX Team"
+    url: "https://github.com/finos/traderX"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0"
 paths:
   /accountuser/:
     get:
@@ -36,6 +43,24 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/AccountUser"
+        "400":
+          description: "Bad Request - Invalid account user data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Not Found - Account user mapping not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     post:
       tags:
         - account-user-controller
@@ -54,6 +79,24 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/AccountUser"
+        "400":
+          description: "Bad Request - Invalid account user data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Not Found - Referenced account not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /account/:
     get:
       tags:
@@ -67,12 +110,23 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/AccountList"
+        "400":
+          description: "Bad Request - Invalid parameters"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     put:
       tags:
         - account-controller
       operationId: updateAccount
       description: "Updates an account"
-
       requestBody:
         content:
           application/json:
@@ -86,6 +140,24 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Account"
+        "400":
+          description: "Bad Request - Invalid account data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Not Found - Account not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     post:
       tags:
         - account-controller
@@ -104,6 +176,18 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Account"
+        "400":
+          description: "Bad Request - Invalid account data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /accountuser/{id}:
     get:
       tags:
@@ -124,6 +208,24 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/AccountUser"
+        "400":
+          description: "Bad Request - Invalid account user ID format"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Not Found - Account user mapping not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /account/{id}:
     get:
       tags:
@@ -144,6 +246,24 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Account"
+        "400":
+          description: "Bad Request - Invalid account ID format"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Not Found - Account not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     AccountList:
@@ -157,21 +277,59 @@ components:
           displayName: "test account 5"
     AccountUser:
       type: object
+      required:
+        - accountId
+        - username
       properties:
         accountId:
           type: integer
           format: int32
+          description: "ID of the associated account"
           example: 22214
         username:
           type: string
-          example: user02
+          description: "Username of the associated user"
+          example: "trader01"
+          minLength: 1
+          maxLength: 50
     Account:
       type: object
+      required:
+        - displayName
       properties:
         id:
           type: integer
           format: int32
+          description: "Unique identifier for the account"
           example: 22215
+          readOnly: true
         displayName:
           type: string
-          example: "test account 5"
+          description: "Human-readable name for the account"
+          example: "Trading Account 5"
+          minLength: 1
+          maxLength: 100
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: "Error code identifying the type of error"
+          example: "NOT_FOUND"
+          enum:
+            - "BAD_REQUEST"
+            - "NOT_FOUND"
+            - "INTERNAL_ERROR"
+        message:
+          type: string
+          description: "Human-readable error message"
+          example: "Account not found"
+  securitySchemes:
+    cors:
+      type: apiKey
+      name: Origin
+      in: header
+      description: "CORS enabled. All origins are allowed (*). This service accepts requests from any origin."
