@@ -246,6 +246,55 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Account"
+                
+  /account/{id}/trades:
+    get:
+      tags:
+        - account-controller
+      operationId: getRecentTrades
+      description: "Gets recent trades for an account"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: days
+          in: query
+          required: false
+          description: "Number of days to look back (default: 7)"
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 365
+            default: 7
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecentTradesResponse"
+        "400":
+          description: "Bad Request - Invalid account ID or days parameter"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Not Found - Account not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "400":
           description: "Bad Request - Invalid account ID format"
           content:
@@ -327,6 +376,46 @@ components:
           type: string
           description: "Human-readable error message"
           example: "Account not found"
+    RecentTradesResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: "Trade identifier"
+            example: "ABC-123-XYZ"
+          accountId:
+            type: integer
+            format: int32
+            description: "Account identifier"
+            example: 22214
+          security:
+            type: string
+            description: "Security symbol"
+            example: "ADBE"
+          side:
+            type: string
+            description: "Trade side (Buy/Sell)"
+            example: "Buy"
+          state:
+            type: string
+            description: "Trade state"
+            example: "New"
+          quantity:
+            type: integer
+            format: int32
+            description: "Trade quantity"
+            example: 100
+          created:
+            type: string
+            format: date-time
+            description: "Trade creation timestamp"
+          updated:
+            type: string
+            format: date-time
+            description: "Last update timestamp"
+
   securitySchemes:
     cors:
       type: apiKey
