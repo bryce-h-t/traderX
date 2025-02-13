@@ -47,7 +47,7 @@ namespace PeopleService.Core.Queries
             public bool IsValid { get; set; }
         }
 
-        internal class RequestHandler : IRequestHandler<Request, Response>
+        public class RequestHandler : IRequestHandler<Request, Response>
         {
             private readonly IDirectoryService _directoryService;
 

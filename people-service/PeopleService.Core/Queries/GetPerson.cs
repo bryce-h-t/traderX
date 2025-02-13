@@ -42,7 +42,7 @@ namespace PeopleService.Core.Queries
             }
         }
 
-        internal class RequestHandler : IRequestHandler<Request, Person?>
+        public class RequestHandler : IRequestHandler<Request, Person?>
         {
             private readonly IDirectoryService _directoryService;
 

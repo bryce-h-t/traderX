@@ -59,7 +59,7 @@ namespace PeopleService.Core.Queries
             }
         }
 
-        internal class RequestHandler : IRequestHandler<Request, Response?>
+        public class RequestHandler : IRequestHandler<Request, Response?>
         {
             private readonly IDirectoryService _directoryService;
             private readonly ICacheManager<Response> _cacheManager;
