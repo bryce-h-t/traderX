@@ -10,16 +10,17 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import finos.traderx.positionservice.model.Position;
 import finos.traderx.positionservice.repository.PositionRepository;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class PositionServiceTest {
 
-    @MockBean
+    @Mock
     private PositionRepository positionRepository;
 
     private PositionService positionService;
